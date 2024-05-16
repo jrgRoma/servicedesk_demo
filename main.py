@@ -9,6 +9,13 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/incidencia")
+async def get_incidencia():
+    incidencia_mermelada = {
+        "id": 1,
+        "titulo": "Incidencia sobre mermelada",
+        "descripcion": "Se ha detectado un problema con la calidad de la mermelada en el lote 12345.",
+        "estado": "Pendiente",
+        "fecha": "2024-05-16"
+    }
+    return incidencia_mermelada
