@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 
 app = FastAPI()
 
@@ -7,8 +7,8 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/incidencia/")
-async def get_incidencia(id: int):
+@app.get("/incidencia")
+async def get_incidencia(id: int = Query(..., description="ID de la incidencia")):
     incidencias = {
         1: {
             "id": 1,
@@ -21,13 +21,13 @@ async def get_incidencia(id: int):
             "id": 2,
             "titulo": "Incidencia sobre mermelada con moho",
             "descripcion": "Un cliente ha reportado que encontró moho en un frasco de mermelada.",
-            "estado": "Cerrado",
+            "estado": "En proceso",
             "fecha": "2024-05-17"
         },
         3: {
             "id": 3,
             "titulo": "Incidencia sobre tapa de mermelada",
-            "descripcion": "Se ha informado que algunas tapas de los frascos de mermelada no cierran correctamente.",
+            "descripcion": "Se ha informado que algunas tapas de los frascos no cierran correctamente.",
             "estado": "Resuelto",
             "fecha": "2024-05-15"
         },
