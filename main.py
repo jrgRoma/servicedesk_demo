@@ -1,5 +1,7 @@
 from typing import Optional, Dict, Any
 from fastapi import FastAPI, Query
+import json
+from fastapi.openapi.utils import get_openapi
 
 app = FastAPI()
 
@@ -44,3 +46,29 @@ async def get_incidencia(id: Optional[int] = Query(None, description="ID de la i
         return incidencias.get(id, {"error": "Incidencia no encontrada"})
     return list(incidencias.values())
 
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        servers=[
+            {
+                "url": "https://servicedesk-demo.onrender.com",
+                "description": "Plugin ServiceDesk server",
+            }
+        ],
+        title="API de Incidencias",
+        version="1.0.0",
+        description="Esta es una API para gestionar incidencias.",
+        routes=app.routes,
+    )
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
+
+# Serialize the OpenAPI schema to a pretty-printed JSON string
+openapi_schema_json = json.dumps(app.openapi(), indent=2)
+
+# Write the schema to a file
+with open("openapi.json", "w") as f:
+    f.write(openapi_schema_json)
